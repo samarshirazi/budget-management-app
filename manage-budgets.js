@@ -369,19 +369,70 @@ function rebalance() {
     }, 1500);
 }
 
+// Haptic feedback helper
+function triggerHaptic(style = 'light') {
+    if ('vibrate' in navigator) {
+        const patterns = {
+            light: 10,
+            medium: 20,
+            heavy: 30
+        };
+        navigator.vibrate(patterns[style] || 10);
+    }
+}
+
+// Mobile AI panel collapse/expand
+function setupMobileAIPanel() {
+    const aiPanel = document.querySelector('.ai-panel');
+    if (!aiPanel) return;
+
+    // Check if mobile
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) return;
+
+    // Start collapsed on mobile
+    aiPanel.classList.add('collapsed');
+
+    // Toggle on click
+    aiPanel.addEventListener('click', () => {
+        aiPanel.classList.toggle('collapsed');
+        triggerHaptic('light');
+    });
+
+    // Prevent toggle when clicking buttons inside
+    const buttons = aiPanel.querySelectorAll('button');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    });
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Month navigation
-    document.getElementById('prevMonth').addEventListener('click', () => changeMonth('prev'));
-    document.getElementById('nextMonth').addEventListener('click', () => changeMonth('next'));
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        changeMonth('prev');
+        triggerHaptic('light');
+    });
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        changeMonth('next');
+        triggerHaptic('light');
+    });
 
     // AI suggest
-    document.querySelector('.ai-suggest-btn').addEventListener('click', aiSuggest);
+    document.querySelector('.ai-suggest-btn').addEventListener('click', () => {
+        aiSuggest();
+        triggerHaptic('medium');
+    });
 
     // Modal controls
     document.getElementById('modalClose').addEventListener('click', closeEditModal);
     document.getElementById('modalCancel').addEventListener('click', closeEditModal);
-    document.getElementById('modalSave').addEventListener('click', saveBudget);
+    document.getElementById('modalSave').addEventListener('click', () => {
+        saveBudget();
+        triggerHaptic('medium');
+    });
 
     // Close modal on overlay click
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
@@ -391,24 +442,41 @@ function setupEventListeners() {
     });
 
     // AI actions
-    document.getElementById('rebalanceBtn').addEventListener('click', rebalance);
+    document.getElementById('rebalanceBtn').addEventListener('click', () => {
+        rebalance();
+        triggerHaptic('heavy');
+    });
     document.getElementById('ignoreBtn').addEventListener('click', () => {
         showNotification('AI suggestion dismissed');
+        triggerHaptic('light');
     });
 
     // Auto-adjust toggle
     document.getElementById('autoAdjust').addEventListener('change', (e) => {
+        triggerHaptic('medium');
         if (e.target.checked) {
             showNotification('Auto-adjust enabled for next month');
+            // Add glow effect
+            e.target.parentElement.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
         } else {
             showNotification('Auto-adjust disabled');
+            e.target.parentElement.style.boxShadow = '';
         }
     });
 
     // Action bar buttons
-    document.getElementById('resetBtn').addEventListener('click', resetBudgets);
-    document.getElementById('saveBtn').addEventListener('click', saveChanges);
-    document.getElementById('floatingSaveBtn').addEventListener('click', saveChanges);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        resetBudgets();
+        triggerHaptic('medium');
+    });
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        saveChanges();
+        triggerHaptic('medium');
+    });
+    document.getElementById('floatingSaveBtn').addEventListener('click', () => {
+        saveChanges();
+        triggerHaptic('medium');
+    });
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -420,6 +488,12 @@ function setupEventListeners() {
             saveChanges();
         }
     });
+
+    // Setup mobile features
+    setupMobileAIPanel();
+
+    // Update AI panel on resize
+    window.addEventListener('resize', setupMobileAIPanel);
 }
 
 // Smooth scroll reveal animation for cards
