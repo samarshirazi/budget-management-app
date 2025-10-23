@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Budgets - Personal Finance</title>
+    <link rel="stylesheet" href="manage-budgets.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Section -->
+        <header class="page-header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>Manage Budgets</h1>
+                    <p class="subtitle">Set monthly limits for your spending categories.</p>
+                </div>
+                <div class="header-controls">
+                    <div class="month-selector">
+                        <button class="month-nav" id="prevMonth">‹</button>
+                        <span class="current-month" id="currentMonth">October 2025</span>
+                        <button class="month-nav" id="nextMonth">›</button>
+                    </div>
+                    <button class="ai-suggest-btn">
+                        <span class="emoji">💬</span>
+                        <span class="btn-text">Ask AI for Smart Budgets</span>
+                        <span class="btn-text-mobile">AI</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-grid">
+                <!-- Left Column: Overview + Categories -->
+                <div class="left-column">
+                    <!-- Budget Overview Card -->
+                    <div class="card overview-card">
+                        <h2 class="card-title">Budget Overview</h2>
+                        <div class="overview-content">
+                            <div class="circular-progress">
+                                <svg class="progress-ring" width="200" height="200">
+                                    <circle class="progress-ring-bg" cx="100" cy="100" r="80"></circle>
+                                    <circle class="progress-ring-fill" cx="100" cy="100" r="80" id="progressCircle"></circle>
+                                </svg>
+                                <div class="progress-text">
+                                    <div class="progress-percent" id="totalPercent">28%</div>
+                                    <div class="progress-label">spent</div>
+                                </div>
+                            </div>
+                            <div class="overview-stats">
+                                <div class="stat-row">
+                                    <span class="stat-label">Spent</span>
+                                    <span class="stat-value spent" id="totalSpent">$425.00</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span class="stat-label">Budget</span>
+                                    <span class="stat-value" id="totalBudget">$1,500.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-summary">
+                            <span class="ai-icon">✨</span>
+                            <span id="aiSummary">You're pacing 8% lower than last month.</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Budget Cards -->
+                    <div class="categories-section">
+                        <h2 class="section-title">Category Budgets</h2>
+                        <div class="category-grid" id="categoryGrid">
+                            <!-- Categories will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: AI Suggestions -->
+                <div class="right-column">
+                    <div class="card ai-panel">
+                        <h3 class="card-title">AI Suggestions</h3>
+                        <div class="ai-content">
+                            <div class="ai-icon-large">🤖</div>
+                            <p class="ai-message">
+                                AI found your <strong>Transport</strong> and <strong>Food</strong> budgets might exceed your average. Want to rebalance?
+                            </p>
+                            <div class="ai-actions">
+                                <button class="btn-secondary" id="ignoreBtn">Ignore</button>
+                                <button class="btn-gradient" id="rebalanceBtn">Rebalance</button>
+                            </div>
+                            <div class="ai-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoAdjust">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Auto-adjust next month's budgets</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="action-bar">
+            <button class="btn-reset" id="resetBtn">Reset All Budgets</button>
+            <button class="btn-save" id="saveBtn">
+                <span class="save-icon">💾</span>
+                <span>Save Changes</span>
+            </button>
+        </div>
+
+        <!-- Mobile Floating Save Button -->
+        <button class="floating-save-btn" id="floatingSaveBtn">
+            <span>💾</span>
+        </button>
+    </div>
+
+    <!-- Edit Budget Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit Budget</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-category-icon" id="modalIcon"></div>
+                <div class="modal-form">
+                    <label for="budgetInput">Monthly Budget</label>
+                    <div class="input-with-currency">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="budgetInput" placeholder="0.00" step="0.01">
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="budgetSlider" min="0" max="1000" step="10">
+                        <div class="slider-labels">
+                            <span>$0</span>
+                            <span>$1,000</span>
+                        </div>
+                    </div>
+                    <div class="current-spending">
+                        <span>Current spending: </span>
+                        <strong id="modalSpent">$0.00</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn-gradient" id="modalSave">Save Budget</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="manage-budgets.js"></script>
+</body>
+</html>
